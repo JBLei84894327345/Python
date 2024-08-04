@@ -1,0 +1,24 @@
+from scapy.all import sniff, IP, TCP  
+  
+def packet_callback(packet):  
+    # Check if the packet has a TCP layer  
+    if packet[IP].haslayer(TCP):  
+        # Extract and print the source and destination IP addresses and ports  
+        print(f"Source IP: {packet[IP].src}, Destination IP: {packet[IP].dst}")  
+        print(f"Source Port: {packet[TCP].sport}, Destination Port: {packet[TCP].dport}")  
+  
+def main():  
+    print("Starting network packet listener...")  
+    # Sniff packets on all interfaces, filtering for TCP packets  
+    # Note: For specific interfaces, use iface="interface_name"  
+    sniff(filter="tcp", prn=packet_callback, store=0)  
+  
+if __name__ == "__main__":  
+    main()  
+  
+# Note: This program requires the Scapy library to be installed.  
+# pip install scapy
+# It listens for TCP packets on the network and prints the source and destination  
+# IP addresses and ports for each packet captured.  
+# The store=0 parameter means that captured packets are not stored in memory,  
+# which can help reduce memory usage for long-running packet captures.
