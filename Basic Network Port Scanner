@@ -1,0 +1,47 @@
+import socket  # Import the socket module for network communication  
+
+# It's important to remember that port scanning without proper authorization can be 
+# considered an illegal activity in many jurisdictions.
+# Always ensure you have the proper permissions before scanning a network or device.
+
+def scan_ports(ip, ports):    
+    """  
+    Scan a range of ports on a given IP address.  
+      
+    Parameters:  
+    - ip: The IP address to scan.  
+    - ports: A tuple containing the start and end port numbers to scan.  
+      
+    Returns:  
+    - A list of open ports found in the specified range.  
+    """  
+    open_ports = []  # Initialize an empty list to store open ports  
+    for port in range(ports[0], ports[1] + 1):  # Iterate through the port range  
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a new socket object  
+        # Set the default timeout for socket operations to 1 second  
+        socket.setdefaulttimeout(1)    
+        result = sock.connect_ex((ip, port))  # Attempt to connect to the port  
+        if result == 0:  # If the connection was successful (result == 0 means no error)  
+            open_ports.append(port)  # Add the port to the list of open ports  
+            print(f"Port {port} is open on {ip}")  # Print a message indicating the open port  
+        sock.close()  # Close the socket, whether the connection was successful or not  
+    return open_ports  # Return the list of open ports  
+  
+if __name__ == "__main__":    
+    # Prompt the user for input  
+    target_ip = input("Enter the IP address to scan: ")    
+    start_port = int(input("Enter the start port number: "))    
+    end_port = int(input("Enter the end port number: "))    
+    
+    # Call the scan_ports function and store the result  
+    open_ports = scan_ports(target_ip, (start_port, end_port))    
+      
+    # Check if any open ports were found and print the result  
+    if not open_ports:    
+        print(f"No open ports found in the range {start_port}-{end_port} on {target_ip}")    
+    else:    
+        print(f"Open ports on {target_ip}: {open_ports}") 
+
+# Note: This code does not accurately reflect how a real port scanner works.  
+# A real scanner would use sockets, handle timeouts, and potentially use more advanced  
+# techniques to evade detection by firewalls and intrusion detection systems.
